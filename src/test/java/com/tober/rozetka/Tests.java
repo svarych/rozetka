@@ -27,28 +27,40 @@ class Tests {
 
     @Test
     void t0() throws InterruptedException {
-        open("https://rozetka.ua");
+        int random;
 
+        open("https://rozetka.ua");
+//        MainPage mainPage = new MainPage();
+//        mainPage.goToRandomMenu();
         ArrayList<String> mainMenuList = new ArrayList<>($$(byName("m-main-i")).texts());
-        int random = (int) (Math.random() * (mainMenuList.size() - 2));
+        random = (int) (Math.random() * (mainMenuList.size() - 2));
         $(byText(mainMenuList.get(random))).hover().$(byXpath("//div[@name='second_menu']")).shouldBe(appear);
+
+//        mainPage.selectRandomGroup();
 
         ArrayList<String> menuList = new ArrayList<>($$(byClassName("f-menu-sub-l-i")).texts());
         random = (int) (Math.random() * menuList.size());
         $(byText(menuList.get(random))).click();
 
+//        GoodsPage goodsPage = new GoodsPage();
+//        goodsPage.selectRandomGoods();
+
         ArrayList<String> goodsList = new ArrayList<>($$(byClassName("g-i-tile-i-title")).texts());
         random = (int) (Math.random() * goodsList.size());
         $(byText(goodsList.get(random))).scrollTo().hover().click();
-        $(byName("topurchases")).shouldBe(visible).click();
 
+
+        $(byName("topurchases")).shouldBe(visible).click();
         String etalon = $(byClassName("detail-title")).getText();
 
-        $(byId("cart-popup")).shouldBe(appear);
-        $(byLinkText("Продолжить покупки")).shouldBe(appear).click();
-        $(byId("cart-popup")).shouldBe(disappear);
-        $(byLinkText("Продолжить покупки")).shouldBe(visible).click();
-        $(byId("cart-popup")).shouldNotBe(visible);
+        try {
+            $(byId("cart-popup")).shouldBe(appear);
+            $(byLinkText("Продолжить покупки")).shouldBe(appear).click();
+            $(byId("cart-popup")).shouldBe(disappear);
+        } catch (Throwable t) {
+            $(byLinkText("Продолжить покупки")).shouldBe(visible).click();
+            $(byId("cart-popup")).shouldNotBe(visible);
+        }
 
         $(byText("Корзина")).click();
 
